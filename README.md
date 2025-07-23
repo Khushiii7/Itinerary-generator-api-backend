@@ -1,18 +1,9 @@
 # Itinerary Generator API
 
-A robust backend service that generates beautiful, printable PDF itineraries from JSON input. This API processes travel data and creates well-formatted PDF documents with travel details, schedules, and booking information.
+A backend service that generates PDF itineraries from JSON input. This API processes travel data and creates well-formatted PDF documents with travel details, schedules and booking information.
 
-## Features
-
-- Generate professional PDF itineraries from JSON input
-- Support for multi-day itineraries with activities grouped by time of day
-- Automatic calculation of trip duration
-- Clean, responsive PDF output
-- Easy-to-use REST API
-- Containerized with Docker for easy deployment
 
 ## Prerequisites
-
 - Docker (with Docker Compose) - [Download Docker](https://www.docker.com/products/docker-desktop)
 - 4GB+ of free RAM (required for Chromium PDF generation)
 
@@ -30,10 +21,6 @@ A robust backend service that generates beautiful, printable PDF itineraries fro
    ```bash
    docker-compose up -d
    ```
-   This will:
-   - Build the Docker image
-   - Start the API on port 8080
-   - Create necessary directories
 
 ### Method 2: Manual Setup
 
@@ -81,22 +68,47 @@ Create a JSON file (e.g., `input/my_trip.json`) with your itinerary details:
 
 ```json
 {
-  "trip_name": "My Awesome Trip",
-  "user_name": "John Doe",
-  "start_date": "2025-08-15",
-  "end_date": "2025-08-20",
+  "trip_name": "Mumbai Getaway",
+  "user_name": "Khushi",
+  "start_date": "2025-07-25",
+  "end_date": "2025-07-28",
+  "Payment": {
+    "Method": "Credit Card",
+    "Installment": "Full Payment",
+    "Date": "2025-07-22"
+  },
   "days": [
     {
       "day_number": 1,
-      "date": "2025-08-15",
+      "date": "2025-07-25",
       "time_groups": [
         {
           "time_of_day": "Morning",
           "activities": [
             {
-              "name": "Flight to Destination",
+              "name": "Flight to Mumbai",
               "time": "07:00 AM",
-              "location": "JFK to LAX"
+              "location": "DEL to BOM"
+            }
+          ]
+        },
+        {
+          "time_of_day": "Afternoon",
+          "activities": [
+            {
+              "name": "Lunch at Restaurant",
+              "time": "01:30 PM",
+              "location": "Mumbai Downtown"
+            }
+          ]
+        },
+        {
+          "time_of_day": "Evening",
+          "activities": [
+            {
+              "name": "Evening Walk",
+              "time": "07:00 PM",
+              "location": "Marine Drive"
             }
           ]
         }
@@ -107,66 +119,17 @@ Create a JSON file (e.g., `input/my_trip.json`) with your itinerary details:
 ```
 
 ## Output
-
 Generated PDFs are saved in the `output` directory with filenames in the format: `itinerary_[username]_[date].pdf`
 
 ## Development
 
-### Project Structure
-
 ```
-.
-├── Dockerfile           # Docker configuration
-├── docker-compose.yml   # Docker Compose configuration
-├── go.mod              # Go module definition
-├── main.go             # Application entry point
-├── input/              # Sample input JSON files
-├── output/             # Generated PDFs (created at runtime)
-└── templates/          # HTML templates for PDF generation
-```
-
 ### Building the Docker Image
 
 ```bash
 docker build -t itinerary-api .
 ```
 
-### Running Tests
-
-```bash
-go test ./...
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Port 8080 is already in use**
-   - Change the port mapping in `docker-compose.yml` or use `-p` flag:
-     ```bash
-     docker run -p 8081:8080 -d itinerary-api
-     ```
-
-2. **Permission denied when writing to output directory**
-   - Ensure the output directory has write permissions:
-     ```bash
-     chmod -R 777 output/
-     ```
-
-3. **Container fails to start**
-   - Check logs:
-     ```bash
-     docker logs <container_id>
-     ```
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
