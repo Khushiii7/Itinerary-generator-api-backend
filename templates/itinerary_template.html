@@ -1,0 +1,49 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itinerary</title>
+    <link rel="stylesheet" href="./Itenary_files/index.css">
+</head>
+<body>
+    <div style="padding: 24px 0px; display: flex; justify-content: flex-start; align-items: center;">
+        <img src="./Itenary_files/Vigvia logo.png" alt="Vigovia Logo" style="width: 220px; max-width: 100%; margin-left: 60px;">
+    </div>
+    <div style="margin: 24px auto; background: linear-gradient(90deg, rgb(75, 161, 235) 0%, rgb(147, 111, 224) 100%); border-radius: 24px; padding: 32px 24px; color: #fff; text-align: center; width: 95%; font-family: Poppins, sans-serif;">
+        <h2 style="font-size: 36px; font-weight: 700; margin: 0px; letter-spacing: 0.5px;">Hi, {{.TravellerName}}!</h2>
+        <h1 style="font-size: 40px; font-weight: 800; margin: 12px 0px 0px; letter-spacing: 0.5px;">Itinerary</h1>
+        <p style="margin: 12px 0px 0px; font-size: 24px; font-weight: 500;">Start Date: {{.StartDate}}</p>
+        <div style="display: flex; justify-content: center; margin-top: 18px; gap: 28px; font-size: 32px;">
+            <span>✈️</span><span>🏨</span><span>🔄</span><span>🚗</span><span>🚌</span>
+        </div>
+    </div>
+    <div style="width: 90%; margin: 24px auto 0px; border: 2px solid #541C9C; border-radius: 16px; padding: 16px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-evenly; align-items: center; font-size: 16px; color: #222;">
+            <div><p>Traveller Name</p><p>{{.TravellerName}}</p></div>
+            <div><p>Start Date</p><p>{{.StartDate}}</p></div>
+            <div><p>Destination</p><p>{{.Destination}}</p></div>
+            <div><p>Nights</p><p>{{.Nights}}</p></div>
+            <div><p>No. Of Travellers</p><p>{{.NumTravellers}}</p></div>
+            <div><p>Rooms</p><p>{{.Rooms}}</p></div>
+        </div>
+    </div>
+    <div style="width: 100%; margin: 40px 0px;">
+        {{range .Days}}
+        <div style="width: 90%; margin: 40px auto; border-radius: 16px; background: #f5f5f5; padding: 24px;">
+            <div style="font-size: 20px; font-weight: bold; color: #541C9C; margin-bottom: 12px;">Date: {{.Date}}</div>
+            <ul>
+                {{range .Activities}}
+                <li style="margin-bottom: 10px; padding: 12px; background: #f9eeff; border-radius: 8px;">
+                    <span style="font-weight: bold; color: #321e5d;">Type:</span> {{.Type}}<br>
+                    <span style="font-weight: bold; color: #321e5d;">Time:</span> {{.Time}}<br>
+                    <span style="font-weight: bold; color: #321e5d;">Details:</span> {{.Details}}
+                </li>
+                {{end}}
+            </ul>
+        </div>
+        {{end}}
+    </div>
+    <!-- Add more sections for Flight Summary, Hotel Bookings, Payment Plan, Scope of Service, etc., using similar Go template placeholders -->
+</body>
+</html> -->

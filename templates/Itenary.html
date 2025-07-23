@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.TripName}} - Itinerary</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            background: #FBF4FF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 24px rgba(84,28,156,0.08);
+            padding: 0;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(90deg, #6C2EBE 0%, #936FE0 100%);
+            color: #fff;
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+            text-align: center;
+            border-radius: 1rem 1rem 0 0;
+        }
+        .content-wrapper {
+            padding: 0 2.5rem 2.5rem 2.5rem;
+        }
+        .summary-box {
+            background: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 2px solid #6C2EBE;
+            box-shadow: 0 2px 12px rgba(108, 46, 190, 0.1);
+        }
+        .summary-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+        }
+        .summary-icon {
+            color: #6C2EBE;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F5F0FF;
+            border-radius: 50%;
+        }
+        .summary-content h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .summary-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            white-space: nowrap;
+        }
+        .day {
+            margin-bottom: 2.5rem;
+            border-left: 4px solid #6C2EBE;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .day:last-child {
+            margin-bottom: 1rem;
+        }
+        .day-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #541C9C;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .day-number {
+            background: #6C2EBE;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .activity {
+            background: #f9f2ff;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .activity-time {
+            font-weight: 600;
+            color: #541C9C;
+            min-width: 80px;
+        }
+        .activity-details {
+            flex: 1;
+        }
+        .activity-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #333;
+        }
+        .activity-location {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .activity-location:before {
+            content: "";
+            font-size: 0.8em;
+        }
+        .footer {
+            background: linear-gradient(135deg, #6C2EBE 0%, #8E44AD 100%);
+            padding: 3rem 5% 2rem;
+            margin-top: 4rem;
+            width: 100%;
+            clear: both;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+        
+        .footer-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .footer-section h3 {
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #FFD700;
+            transition: width 0.3s ease;
+        }
+        
+        .footer-section:hover h3::after {
+            width: 60px;
+        }
+        
+        .footer-section p,
+        .footer-section a {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+        
+        .footer-section a:hover {
+            color: #FFD700;
+            transform: translateX(5px);
+            text-decoration: none;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: #FFD700;
+            color: #6C2EBE;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media print {
+            .footer {
+                position: relative !important;
+                background: #f5f5f5 !important;
+                color: #333 !important;
+                padding: 1.5rem 5% !important;
+                margin: 2rem 0 0 !important;
+                box-shadow: none !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            
+            .footer-section h3 {
+                color: #333 !important;
+                font-weight: 600 !important;
+            }
+            
+            .footer-section p,
+            .footer-section a {
+                color: #555 !important;
+            }
+            
+            .footer-bottom {
+                border-top: 1px solid #ddd !important;
+                color: #666 !important;
+            }
+            
+            .footer,
+            .footer * {
+                color: #000 !important;
+                background: transparent !important;
+            }
+            
+            .footer::before,
+            .footer-section h3::after,
+            .social-links a:hover {
+                display: none !important;
+            }
+            
+            .footer a {
+                text-decoration: underline !important;
+            }
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 2.5rem;
+            width: 2px;
+            background: #E9ECEF;
+            z-index: 1;
+        }
+        
+        .day-container {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .day-circle {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: #6C2EBE;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #6C2EBE;
+        }
+        
+        .day-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+        
+        .time-group {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 5rem;
+        }
+        
+        .time-marker {
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #6C2EBE;
+            border: 1px solid #E9ECEF;
+            z-index: 2;
+        }
+        
+        .activity-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #E9ECEF;
+            position: relative;
+        }
+        
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            left: -3.5rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: #6C2EBE;
+            border: 3px solid white;
+            z-index: 2;
+        }
+        
+        .activity-time {
+            font-size: 0.9rem;
+            color: #6C757D;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .activity-time::before {
+            content: '🕒';
+            margin-right: 0.5rem;
+        }
+        
+        .activity-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .activity-location {
+            font-size: 0.9rem;
+            color: #6C757D;
+            display: flex;
+            align-items: center;
+        }
+        
+        .activity-location::before {
+            content: '📍';
+            margin-right: 0.5rem;
+        }
+        
+        .day-card {
+            display: flex;
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        .day-sidebar {
+            background: #6C2EBE;
+            color: white;
+            padding: 1.5rem 1rem;
+            min-width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .day-number {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .day-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.25rem;
+        }
+        
+        .day-content {
+            flex: 1;
+            padding: 1.5rem;
+        }
+        
+        .day-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #E9ECEF;
+        }
+        
+        .activity-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .time-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            color: #6C2EBE;
+            font-weight: 500;
+        }
+        
+        .time-header::before {
+            content: '🕒';
+            margin-right: 0.5rem;
+        }
+        
+        .activity-item {
+            background: #F8F9FA;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid #6C2EBE;
+        }
+        
+        .activity-name {
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-location {
+            font-size: 0.9rem;
+            color: #6C757D;
+            display: flex;
+            align-items: center;
+        }
+        
+        .activity-location::before {
+            content: '';
+            margin-right: 0.5rem;
+        }
+        
+        .time-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .time-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #6C2EBE;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid #E9ECEF;
+            display: flex;
+            align-items: center;
+        }
+
+        .time-header::before {
+            content: '';
+            margin-right: 0.5rem;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: #6C757D;
+            margin-top: 0.5rem;
+        }
+        
+        /* Flight Summary*/
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            text-align: center;
+        }
+        
+        .section-title .highlight {
+            color: #6C2EBE;
+        }
+        
+        .flight-summary-box {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin: 1rem 0 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .flight-header {
+            background: #f8f5ff;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #6C2EBE;
+            border-bottom: 1px solid #e8e0ff;
+            font-size: 0.9rem;
+        }
+        
+        .flight-content {
+            padding: 20px;
+        }
+        
+        .flight-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .flight-airline {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .flight-number {
+            color: #666;
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .flight-route {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .airport {
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        .airport-code {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #333;
+        }
+        
+        .airport-city {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .flight-separator {
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .flight-time {
+            font-size: 0.9rem;
+            color: #333;
+            white-space: nowrap;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .flight-duration {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 3px;
+        }
+        
+        .flight-aircraft {
+            color: #666;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+        
+        .flight-notes {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .flight-notes strong {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        /* Hotel Booking*/
+        .hotel-booking {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            margin: 1rem 0 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .hotel-header {
+            background: #f8f5ff;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #6C2EBE;
+            border-bottom: 1px solid #e8e0ff;
+            font-size: 0.9rem;
+        }
+        
+        .hotel-content {
+            padding: 20px;
+        }
+        
+        .hotel-info {
+            margin-bottom: 20px;
+        }
+        
+        .hotel-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .detail-value {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .hotel-notes {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .hotel-notes strong {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .hotel-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .hotel-card-header {
+            background: #f8f5ff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e8e0ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .hotel-name {
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hotel-dates {
+            color: #6C2EBE;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hotel-card-content {
+            padding: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+        
+        .info-label {
+            color: #666;
+            min-width: 120px;
+        }
+        
+        .info-value {
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        .hotel-actions {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .view-voucher-btn {
+            background: #6C2EBE;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .view-voucher-btn:hover {
+            background: #5a26a8;
+        }
+        
+        /* Payment */
+        .payment-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .payment-header {
+            background: #f8f5ff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e8e0ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .payment-content {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6C2EBE;
+        }
+        
+        .input-with-icon input {
+            padding-left: 30px;
+        }
+        
+        .pay-now-btn {
+            background: #6C2EBE;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .pay-now-btn:hover {
+            background: #5a26a8;
+        }
+        
+        .payment-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .payment-header {
+            background: #f8f5ff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e8e0ff;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .payment-content {
+            padding: 20px;
+        }
+        
+        .payment-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .payment-row:last-child {
+            border-bottom: none;
+        }
+        
+        .payment-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .payment-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .payment-status {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f8f0;
+            border-radius: 5px;
+            color: #2e7d32;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Service Card Styles */
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .service-header {
+            background: #f8f5ff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e8e0ff;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-content {
+            padding: 20px;
+        }
+        
+        .service-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .service-table th, 
+        .service-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .service-table th {
+            color: #6C2EBE;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .service-name {
+            font-weight: 500;
+            color: #333;
+            width: 25%;
+        }
+        
+        .service-details {
+            color: #555;
+        }
+        
+        .service-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .service-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        /* Footer */
+        @page {
+            margin: 1.5cm 1cm 2.5cm 1cm;
+        }
+        
+        body {
+            position: relative;
+            padding-bottom: 100px;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #6C2EBE;
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            border-top: 1px solid #E9ECEF;
+        }
+        
+        .footer-logo {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-links a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+        
+        /*PDF print */
+        @media print {
+            @page {
+                margin-bottom: 80px;
+            }
+            
+            .footer {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                right: auto;
+                background: #ffffff;
+                padding: 1.5rem 5%;
+                width: 100%;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                margin: 2rem 0 0;
+                box-shadow: none;
+            }
+            
+            .footer-content {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                max-width: 1200px;
+                margin: 0 auto;
+                gap: 1.5rem;
+            }
+            
+            .footer-section {
+                flex: 1;
+                min-width: 200px;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            .footer-bottom {
+                text-align: center;
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                border-top: 1px solid #eee;
+                width: 100%;
+            }
+        }
+        
+        .footer {
+            background: #ffffff;
+            padding: 2.5rem 5%;
+            margin-top: 2rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            clear: both;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-section h3 {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer-section p,
+        .footer-section a {
+            display: block;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: #6C2EBE;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div style="width:100%;text-align:center;margin:32px 0 12px 0;">
+        <img src="../templates/Itenary_files/Vigvia logo.png" alt="Vigovia Logo" style="width:220px;max-width:100%;">
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Hi {{.UserName}},</h1>
+            <h2>{{.TripName}}</h2>
+            <div class="trip-dates">
+                <span>{{.Duration}}</span>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Summary -->
+            <div class="summary-box">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-content">
+                            <h4>Departure From</h4>
+                            <p>New Delhi</p>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-content">
+                            <h4>Departure Date</h4>
+                            <p>{{.StartDate}}</p>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-content">
+                            <h4>Arrival</h4>
+                            <p>Mumbai</p>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-content">
+                            <h4>Travellers</h4>
+                            <p>2 Adults</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--days itinerary -->
+            {{range $dayIndex, $day := .Days}}
+            <div class="day-card">
+                <div class="day-sidebar">
+                    <div class="day-number">{{$day.DayNumber}}</div>
+                    <div class="day-label">Day</div>
+                </div>
+                <div class="day-content">
+                    <h3 class="day-title">{{$day.Date}}</h3>
+                    
+                    {{if eq $day.DayNumber 1}}
+                    {{end}}
+                    
+                    {{range $timeGroupIndex, $timeGroup := $day.TimeGroups}}
+                    <div class="time-group">
+                        <div class="time-header">{{$timeGroup.TimeOfDay}}</div>
+                        {{range $activityIndex, $activity := $timeGroup.Activities}}
+                        <div class="activity-item">
+                            <div class="activity-name">{{$activity.Name}}</div>
+                            {{if $activity.Location}}
+                            <div class="activity-location">{{$activity.Location}}</div>
+                            {{end}}
+                            {{if $activity.Time}}
+                            <div class="activity-time">{{$activity.Time}}</div>
+                            {{end}}
+                        </div>
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+            {{end}}
+            
+            <!-- Flight Summary -->
+            <div class="section-title">
+                <span>Flight</span> <span class="highlight">Summary</span>
+            </div>
+            
+            {{range $dayIndex, $day := .Days}}
+                {{range $timeGroupIndex, $timeGroup := $day.TimeGroups}}
+                    {{range $activityIndex, $activity := $timeGroup.Activities}}
+                        {{if $activity.Name}}
+                            {{if eq (index $activity.Name 0) 'F'}}
+                                {{if eq (index $activity.Name 1) 'l'}}
+                                    {{if eq (index $activity.Name 2) 'i'}}
+                                        {{if eq (index $activity.Name 3) 'g'}}
+                                            {{if eq (index $activity.Name 4) 'h'}}
+                                                {{if eq (index $activity.Name 5) 't'}}
+                                                    <div class="flight-summary-box">
+                                                        <div class="flight-header">
+                                                            {{$day.Date}}
+                                                        </div>
+                                                        <div class="flight-content">
+                                                            <div class="flight-row">
+                                                                <div class="flight-airline">{{$activity.Name}}</div>
+                                                            </div>
+                                                            
+                                                            <div class="flight-route">
+                                                                <div class="airport">
+                                                                    <div class="airport-code">{{$activity.Location}}</div>
+                                                                    <div class="airport-city">{{$activity.Location}}</div>
+                                                                </div>
+                                                                <div class="flight-separator"></div>
+                                                                <div class="flight-time">
+                                                                    <div>{{$activity.Time}}</div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="flight-notes">
+                                                                <strong>Note:</strong> Check-in opens 24 hours before departure. Please arrive at the airport at least 2 hours before departure.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {{end}}
+                                            {{end}}
+                                        {{end}}
+                                    {{end}}
+                                {{end}}
+                            {{end}}
+                        {{end}}
+                    {{end}}
+                {{end}}
+            {{end}}
+            
+            <!-- Scope of Service -->
+            <div class="section-title" style="margin-top: 40px;">
+                <span>Scope of</span> <span class="highlight">Service</span>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-header">
+                    <i class="fas fa-tasks" style="margin-right: 10px; color: #6C2EBE;"></i>
+                    <span>Included Services</span>
+                </div>
+                
+                <div class="service-content">
+                    <table class="service-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range .ScopeOfService}}
+                            <tr>
+                                <td class="service-name">{{.Service}}</td>
+                                <td class="service-details">{{.Details}}</td>
+                            </tr>
+                            {{else}}
+                            <!-- Default services -->
+                            <tr>
+                                <td class="service-name">Accommodation</td>
+                                <td class="service-details">3 nights in standard double room with breakfast included</td>
+                            </tr>
+                            <tr>
+                                <td class="service-name">Transportation</td>
+                                <td class="service-details">Airport transfers and local transportation as per itinerary</td>
+                            </tr>
+                            <tr>
+                                <td class="service-name">Guided Tours</td>
+                                <td class="service-details">Half-day city tour with English speaking guide</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Hotel Booking -->
+            <div class="section-title" style="margin-top: 40px;">
+                <span>Hotel</span> <span class="highlight">Bookings</span>
+            </div>
+            
+            <div class="hotel-card">
+                <div class="hotel-card-header">
+                    <div class="hotel-name">
+                        <i class="fas fa-hotel" style="margin-right: 8px; color: #6C2EBE;"></i>
+                        <span>Hotel Booking</span>
+                    </div>
+                    <div class="hotel-dates">
+                        <i class="far fa-calendar-alt" style="margin-right: 5px;"></i>
+                        {{.StartDate}} - {{.EndDate}}
+                    </div>
+                </div>
+                <div class="hotel-card-content">
+                    <div class="hotel-info">
+                        <div class="info-item">
+                            <span class="info-label">Guest Name</span>
+                            <span class="info-value">{{.UserName}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Check-in</span>
+                            <span class="info-value">{{.StartDate}} | 14:00</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Check-out</span>
+                            <span class="info-value">{{.EndDate}} | 12:00</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Room Type</span>
+                            <span class="info-value">Standard Double Room</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Booking Ref</span>
+                            <span class="info-value">HOTEL-{{.StartDate}}-{{.TripName}}</span>
+                        </div>
+                    </div>
+                    <div class="hotel-actions">
+                        <button class="view-voucher-btn">
+                            <i class="fas fa-file-alt" style="margin-right: 5px;"></i>
+                            View Voucher
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment  -->
+            <div class="section-title" style="margin-top: 40px;">
+                <span>Payment</span> <span class="highlight">Details</span>
+            </div>
+            
+            <div class="payment-card">
+                <div class="payment-header">
+                    <i class="fas fa-credit-card" style="margin-right: 10px; color: #6C2EBE;"></i>
+                    <span>Payment Information</span>
+                </div>
+                
+                <div class="payment-content">
+                    <div class="payment-details">
+                        <div class="payment-row">
+                            <span class="payment-label">Payment Method:</span>
+                            <span class="payment-value">{{if .Payment.Method}}{{.Payment.Method}}{{else}}Credit Card{{end}}</span>
+                        </div>
+                        <div class="payment-row">
+                            <span class="payment-label">Installment Plan:</span>
+                            <span class="payment-value">{{if .Payment.Installment}}{{.Payment.Installment}}{{else}}Full Payment{{end}}</span>
+                        </div>
+                        <div class="payment-row">
+                            <span class="payment-label">Payment Date:</span>
+                            <span class="payment-value">{{if .Payment.Date}}{{.Payment.Date}}{{else}}{{.CurrentDate}}{{end}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Vigovia Travel</h3>
+                <p>Your trusted travel partner</p>
+                <p>Email: contact@vigovia.com</p>
+                <p>Phone: +91-98xxx64641</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms & Conditions</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Vigovia Travel Technologies (P) Ltd. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardNumberInput = document.getElementById('cardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s+/g, '');
+                    if (value.length > 0) {
+                        value = value.match(/.{1,4}/g).join(' ');
+                    }
+                    e.target.value = value;
+                });
+            }
+            
+            const expiryInput = document.getElementById('expiryDate');
+            if (expiryInput) {
+                expiryInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

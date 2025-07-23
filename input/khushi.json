@@ -1,0 +1,49 @@
+{
+  "trip_name": "Mumbai Getaway",
+  "user_name": "Khushi",
+  "start_date": "2025-07-25",
+  "end_date": "2025-07-28",
+  "Payment": {
+    "Method": "Credit Card",
+    "Installment": "Full Payment",
+    "Date": "2025-07-22"
+  },
+  "days": [
+    {
+      "day_number": 1,
+      "date": "2025-07-25",
+      "time_groups": [
+        {
+          "time_of_day": "Morning",
+          "activities": [
+            {
+              "name": "Flight to Mumbai",
+              "time": "07:00 AM",
+              "location": "DEL to BOM"
+            }
+          ]
+        },
+        {
+          "time_of_day": "Afternoon",
+          "activities": [
+            {
+              "name": "Lunch at Restaurant",
+              "time": "01:30 PM",
+              "location": "Mumbai Downtown"
+            }
+          ]
+        },
+        {
+          "time_of_day": "Evening",
+          "activities": [
+            {
+              "name": "Evening Walk",
+              "time": "07:00 PM",
+              "location": "Marine Drive"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
