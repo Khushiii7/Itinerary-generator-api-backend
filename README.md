@@ -1,4 +1,4 @@
-# Itinerary Generator API
+# Itinerary Generator API (Go)
 
 A backend service that generates PDF itineraries from JSON input. This API processes travel data and creates well-formatted PDF documents with travel details, schedules and booking information.
 
